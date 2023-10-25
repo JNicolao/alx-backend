@@ -1,35 +1,23 @@
-#!/usr/bin/env python3
-"""Task 2: LIFO Caching.
-"""
-from collections import OrderedDict
-
+#!/usr/bin/python3
+""" Python caching systems """
 from base_caching import BaseCaching
 
 
-class LIFOCache(BaseCaching):
-    """Represents an object that allows storing and
-    retrieving items from a dictionary with a LIFO
-    removal mechanism when the limit is reached.
-    """
+class FIFOCache(BaseCaching):
+    """ FIFO caching system """
     def __init__(self):
-        """Initializes the cache.
-        """
+        """ Initialize class instance. """
         super().__init__()
-        self.cache_data = OrderedDict()
 
     def put(self, key, item):
-        """Adds an item in the cache.
-        """
-        if key is None or item is None:
-            return
-        if key not in self.cache_data:
-            if len(self.cache_data) + 1 > BaseCaching.MAX_ITEMS:
-                last_key, _ = self.cache_data.popitem(True)
-                print("DISCARD:", last_key)
-        self.cache_data[key] = item
-        self.cache_data.move_to_end(key, last=True)
+        """ Add an item in the cache """
+        if key and item:
+            self.cache_data[key] = item
+        if len(self.cache_data) > BaseCaching.MAX_ITEMS:
+            discarded_key = sorted(self.cache_data)[0]
+            self.cache_data.pop(discarded_key)
+            print('DISCARD: {}'.format(discarded_key))
 
     def get(self, key):
-        """Retrieves an item by key.
-        """
-        return self.cache_data.get(key, None)
+        """Retrieves an item by key """
+        return self.cache_data.get(key)
